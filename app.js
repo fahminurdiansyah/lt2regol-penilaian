@@ -35,13 +35,29 @@ function scoreControl(item){
  const name=document.createElement("span");name.textContent=item.label;
  const score=document.createElement("span");score.className="score";score.innerHTML='<b id="score-'+item.key+'">0</b>/'+fmt(item.maxScore);
  title.append(name,score);card.append(title);
- const hint=document.createElement("p");hint.className="hint";hint.textContent="Nilai maksimal "+fmt(item.maxScore)+" poin.";card.append(hint);
- const wrap=document.createElement("div");wrap.className="scoreInput";
- const range=document.createElement("input");range.type="range";range.min="0";range.max=String(item.maxScore);range.step="0.5";range.value="0";range.setAttribute("aria-label",item.label+" slider");
- const number=document.createElement("input");number.type="number";number.min="0";number.max=String(item.maxScore);number.step="0.5";number.value="0";number.setAttribute("aria-label",item.label+" nilai");
- const update=v=>{let n=Number(v);if(!Number.isFinite(n))n=0;n=Math.max(0,Math.min(item.maxScore,n));scores[item.key]=n;number.value=String(n);range.value=String(n);$("score-"+item.key).textContent=fmt(n);calculate()};
- range.addEventListener("input",()=>update(range.value));number.addEventListener("input",()=>update(number.value));
- wrap.append(range,number);card.append(wrap);return card;
+ const hint=document.createElement("p");hint.className="hint";hint.textContent="Pilih 1–5 bintang. Skala ketat: 1★ = 0%, 2★ = 25%, 3★ = 50%, 4★ = 75%, 5★ = 100% dari bobot.";card.append(hint);
+ const wrap=document.createElement("div");wrap.className="starInput";wrap.setAttribute("role","group");wrap.setAttribute("aria-label","Penilaian "+item.label);
+ const buttons=[];
+ const labels={1:"Tidak memenuhi",2:"Kurang memenuhi",3:"Cukup memenuhi",4:"Memenuhi dengan baik",5:"Sangat baik"};
+ const update=stars=>{
+  const n=Math.max(0,Math.min(5,Number(stars)||0));
+  const value=n===0?0:((n-1)/4)*item.maxScore;
+  scores[item.key]=value;
+  buttons.forEach((button,index)=>{
+   const active=index<n;button.textContent=active?"★":"☆";
+   button.classList.toggle("selected",active);button.setAttribute("aria-pressed",active?"true":"false");
+   button.setAttribute("aria-label",(index+1)+" bintang");
+  });
+  const chosen=wrap.querySelector(".starDescription");
+  chosen.textContent=n===0?"Belum dinilai":n+"/5 bintang — "+labels[n];
+  $("score-"+item.key).textContent=fmt(value);calculate();
+ };
+ for(let i=1;i<=5;i++){
+  const button=document.createElement("button");button.type="button";button.className="starButton";button.textContent="☆";button.setAttribute("aria-pressed","false");button.setAttribute("aria-label",i+" bintang");button.title=i+" bintang — "+labels[i];
+  button.addEventListener("click",()=>update(i));buttons.push(button);wrap.append(button);
+ }
+ const description=document.createElement("span");description.className="starDescription";description.textContent="Belum dinilai";wrap.append(description);
+ card.append(wrap);return card;
 }
 function calculate(){
  const maxKetepatan=Number(config.criteria.ketepatan||0);
