@@ -96,7 +96,18 @@ function initControls(){
  $("otherCriteria").innerHTML="";
  criteria.filter(x=>!["ketepatan","kelengkapan"].includes(x.key)).forEach(item=>$("otherCriteria").append(scoreControl(item)));
 }
+function setSubmitStage(stage){
+ const steps=[...document.querySelectorAll("#submitSteps li")];
+ steps.forEach((item,index)=>{item.classList.toggle("done",index<stage);item.classList.toggle("active",index===stage);const icon=item.querySelector(".step-icon");icon.textContent=index<stage?"✓":String(index+1)});
+ $("submitProgress").style.width=([0,35,72,100][stage]||100)+"%";
+}
+function closeSubmitModal(){
+ $("submitOverlay").hidden=true;
+ $("submitBtn").disabled=false;$("clearBtn").disabled=false;
+ $("submitBtn").textContent="Kirim penilaian ke Google Forms";
+}
 function submit(){
+ if($("submitBtn").disabled)return;
  clearStatus();const team=$("regu").value.trim();
  if(!team){status("Isi nama regu terlebih dahulu.","err");$("regu").focus();return}
  const deductions=(config.deductionItems||[]).filter(x=>checkedFindings.has(x.id)).reduce((sum,x)=>sum+x.deduction,0);
@@ -106,13 +117,29 @@ function submit(){
  const payload=PenilaianConfig.buildFormPayload(code,team,values);
  const form=$("googleSubmitForm");form.innerHTML="";form.action=PenilaianConfig.FORM_RESPONSE_URL;
  Object.entries(payload).forEach(([name,value])=>{const input=document.createElement("input");input.type="hidden";input.name=name;input.value=String(value);form.append(input)});
- const btn=$("submitBtn");btn.disabled=true;btn.textContent="Mengirim…";
- const iframe=$("googleFormTarget");let finished=false;
- const finish=()=>{if(finished)return;finished=true;btn.disabled=false;btn.textContent="Kirim penilaian ke Google Forms";status("Permintaan pengiriman telah dilakukan. Periksa tab Respons Google Forms untuk memastikan data benar-benar masuk.","ok");iframe.onload=null};
- iframe.onload=()=>setTimeout(finish,700);setTimeout(finish,2500);
+ const btn=$("submitBtn");btn.disabled=true;btn.textContent="Mengirim…";$("clearBtn").disabled=true;
+ const overlay=$("submitOverlay");overlay.hidden=false;
+ $("submitModalTitle").textContent="Mengirim penilaian ke Google Forms";
+ $("submitModalDescription").textContent="Mohon tunggu sekitar 7 detik. Jangan tutup halaman ini.";
+ $("submitFinalNote").hidden=true;$("submitCaveat").hidden=true;$("continueBtn").hidden=true;
+ setSubmitStage(0);
+ let stageTimer=setTimeout(()=>setSubmitStage(1),2200);
+ let stageTimer2=setTimeout(()=>setSubmitStage(2),5000);
+ let finished=false;
+ const finish=()=>{
+  if(finished)return;finished=true;clearTimeout(stageTimer);clearTimeout(stageTimer2);
+  setSubmitStage(3);
+  $("submitModalTitle").textContent="Pengiriman selesai";
+  $("submitModalDescription").textContent="Proses pengiriman telah dijalankan.";
+  $("submitFinalNote").hidden=false;$("submitCaveat").hidden=false;$("continueBtn").hidden=false;
+  btn.textContent="Kirim penilaian ke Google Forms";
+ };
  form.submit();
+ setTimeout(finish,7000);
 }
+
 $("submitBtn").addEventListener("click",submit);
-$("clearBtn").addEventListener("click",reset);
+$("clearBtn").addEventListener("click",()=>{if($("submitBtn").disabled)return;reset()});
+$("continueBtn").addEventListener("click",closeSubmitModal);
 initControls();calculate();
 })();
