@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173d2b"><title>Penilaian A2 — LT II Regol 2026</title>
+<link rel="stylesheet" href="../style.css">
+<script src="../penilaian.js"></script>
+</head>
+<body data-competition="A2">
+<header><h1 id="pageTitle">Penilaian A2</h1><p id="pageSub">LT II Regol 2026</p></header>
+<main>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <section class="card">
+    <div class="title"><span>Identitas penilaian</span><span class="pill" id="codeBadge">A2</span></div>
+    <div class="field"><label for="regu"><b>Nama regu</b></label><input id="regu" type="text" placeholder="Contoh: Singa" autocomplete="off" required></div>
+    <p class="hint">Instrumen dan bobot dibaca dari <code>penilaian.js</code>.</p>
+  </section>
+  <section class="card" id="accuracyCard">
+    <div class="title"><span id="accuracyTitle">Ketepatan</span><span class="score"><b id="accuracyScore">0</b>/<span id="accuracyMax">0</span></span></div>
+    <p class="hint" id="accuracyHint"></p><div id="findings" class="list"></div><p class="hint" id="findsum"></p>
+  </section>
+  <section class="card" id="completenessCard">
+    <div class="title"><span id="completenessTitle">Kelengkapan</span><span class="score"><b id="completenessScore">0</b>/<span id="completenessMax">0</span></span></div>
+    <p class="hint" id="completenessHint"></p><div id="docs" class="list"></div><p class="hint"><span id="count">0</span> butir dicentang.</p>
+  </section>
+  <div id="otherCriteria"></div>
+  <section class="card total"><div><b>Nilai sementara</b><div class="small" id="totalDescription">Total nilai aktif.</div></div><div class="big"><span id="total">0</span><small id="totalMax" style="font-size:12px">/100</small></div></section>
+  <section class="card">
+    <div class="notice"><b>Sebelum mengirim:</b> periksa nama regu dan nilai. Setiap pengiriman menambahkan respons baru di Google Forms; pengiriman ulang tidak menimpa respons lama.</div>
+    <p class="hint">Halaman ini tidak dapat membaca halaman konfirmasi Google Forms karena batasan lintas situs. Setelah mengirim, periksa tab Respons pada Google Forms.</p>
+    <div class="actions"><button class="btn primary full" id="submitBtn">Kirim penilaian ke Google Forms</button><button class="btn full" id="clearBtn">Bersihkan Form</button><a class="btn full" href="../index.html">Kembali ke Menu Utama</a></div>
+  </section>
+</main>
+<iframe name="googleFormTarget" id="googleFormTarget" title="Pengiriman Google Forms" style="display:none"></iframe>
+<form id="googleSubmitForm" method="POST" target="googleFormTarget" style="display:none"></form>
+<script src="../app.js"></script>
+</body></html>
