@@ -32,6 +32,22 @@
   </section>
 </main>
 <iframe name="googleFormTarget" id="googleFormTarget" title="Pengiriman Google Forms" style="display:none"></iframe>
+<div class="submit-overlay" id="submitOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="submitModalTitle">
+  <section class="submit-modal">
+    <h2 id="submitModalTitle">Mengirim penilaian ke Google Forms</h2>
+    <p class="hint" id="submitModalDescription">Mohon tunggu, jangan tutup halaman ini.</p>
+    <ol class="submit-steps" id="submitSteps">
+      <li class="active"><span class="step-icon">1</span><span>Mengirim...</span></li>
+      <li><span class="step-icon">2</span><span>Menginput jawaban...</span></li>
+      <li><span class="step-icon">3</span><span>Selesai</span></li>
+    </ol>
+    <div class="progress-track"><div class="progress-bar" id="submitProgress"></div></div>
+    <p class="submit-final-note" id="submitFinalNote" hidden>Jawaban sudah dikirim. Silakan hapus isian dengan klik <b>Bersihkan Form</b>.</p>
+    <p class="hint" id="submitCaveat" hidden>Catatan: halaman ini tidak dapat memastikan respons sudah tersimpan di Google Forms. Untuk memastikan, periksa tab Respons di Google Forms.</p>
+    <button class="btn primary full" id="continueBtn" type="button" hidden>Lanjutkan</button>
+  </section>
+</div>
+
 <form id="googleSubmitForm" method="POST" target="googleFormTarget" style="display:none"></form>
 <script src="../app.js"></script>
 </body></html>
