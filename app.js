@@ -103,7 +103,9 @@ function setSubmitStage(stage){
 }
 function closeSubmitModal(){
  $("submitOverlay").hidden=true;
- $("submitBtn").disabled=false;$("clearBtn").disabled=false;
+ $("submitBtn").disabled=false;
+ $("clearBtn").disabled=false;
+ $("continueBtn").disabled=true;
  $("submitBtn").textContent="Kirim penilaian ke Google Forms";
 }
 function submit(){
@@ -121,7 +123,10 @@ function submit(){
  const overlay=$("submitOverlay");overlay.hidden=false;
  $("submitModalTitle").textContent="Mengirim penilaian ke Google Forms";
  $("submitModalDescription").textContent="Mohon tunggu sekitar 7 detik. Jangan tutup halaman ini.";
- $("submitFinalNote").hidden=true;$("submitCaveat").hidden=true;$("continueBtn").hidden=true;
+ $("submitFinalNote").hidden=true;
+ $("submitCaveat").hidden=true;
+ $("continueBtn").hidden=true;
+ $("continueBtn").disabled=true;
  setSubmitStage(0);
  let stageTimer=setTimeout(()=>setSubmitStage(1),2200);
  let stageTimer2=setTimeout(()=>setSubmitStage(2),5000);
@@ -131,7 +136,10 @@ function submit(){
   setSubmitStage(3);
   $("submitModalTitle").textContent="Pengiriman selesai";
   $("submitModalDescription").textContent="Proses pengiriman telah dijalankan.";
-  $("submitFinalNote").hidden=false;$("submitCaveat").hidden=false;$("continueBtn").hidden=false;
+  $("submitFinalNote").hidden=false;
+  $("submitCaveat").hidden=false;
+  $("continueBtn").hidden=false;
+  $("continueBtn").disabled=false;
   btn.textContent="Kirim penilaian ke Google Forms";
  };
  form.submit();
